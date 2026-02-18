@@ -7,17 +7,21 @@ const proxy = cors_proxy.createServer({
 });
 
 module.exports = (req, res) => {
+    console.log('received req...')
     // 1. Set the CORS headers so the browser (JSFiddle) is happy
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Origin, Accept, Authorization');
+    console.log('...added headers...')
 
     // 2. Handle the "Preflight" (OPTIONS) request immediately
     if (req.method === 'OPTIONS') {
         res.status(200).end();
+        console.log('...was OPTIONS, finished now.')
         return;
     }
 
+    console.log('...was GET, sending to proxy.')
     // 4. Pass the request to the proxy
     proxy.emit('request', req, res);
 };
