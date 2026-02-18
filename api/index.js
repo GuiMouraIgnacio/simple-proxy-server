@@ -9,7 +9,5 @@ const proxy = cors_proxy.createServer({
 
 // This is the entry point for Vercel Serverless Functions
 module.exports = (req, res) => {
-    // This trick handles the request routing
-    req.url = req.url.replace(/^\/api/, ''); 
     proxy.emit('request', req, res);
 };
