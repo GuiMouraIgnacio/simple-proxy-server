@@ -8,22 +8,24 @@ const proxy = cors_proxy.createServer({
 });
 
 module.exports = (req, res) => {
-    const targetUrl = req.query.url;
-
-    if (!targetUrl) {
-        res.status(400).send("Missing url parameter");
-        return;
-    }
-
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', '*');
-    res.setHeader('Access-Control-Allow-Headers', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Requested-With');
 
     if (req.method === 'OPTIONS') {
-        res.status(200).end();
+        res.writeHead(200);
+        res.end();
         return;
     }
 
-    req.url = targetUrl; 
+    const urlParam = new URL(req.url, `https://${req.headers.host}`).searchParams.get('url');
+
+    if (!urlParam) {
+        res.status(400).send("Usage: /?url=https://example.com");
+        return;
+    }
+
+    req.url = '/' + urlParam;
+
     proxy.emit('request', req, res);
 };
