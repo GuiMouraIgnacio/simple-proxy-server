@@ -1,3 +1,12 @@
+const cors_proxy = require('cors-anywhere');
+
+// Create the proxy server instance
+const proxy = cors_proxy.createServer({
+    originWhitelist: [], // Allow all for now
+    requireHeader: ['origin', 'x-requested-with'],
+    removeHeaders: ['cookie', 'cookie2']
+});
+
 module.exports = (req, res) => {
     const targetUrl = req.query.url;
 
